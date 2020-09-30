@@ -1,9 +1,8 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useEffect} from 'react';
 import Progress from './components/Progress';
 import Question from './components/Question';
 import Answers from './components/Answers';
 import QuizContext from './context/QuizContext';
-
 import {
     SET_ANSWERS,
     SET_CURRENT_QUESTION,
@@ -119,6 +118,30 @@ function App() {
         dispatch({type: SET_SHOW_RESULTS, showResults: true});
     };
 
+    useEffect(() => {
+        document.addEventListener("visibilitychange", function() {
+            document.title = document.hidden ? "I'm away" : "I'm here";
+            if(document.hidden)
+            {
+                alert("Don't switch tabs");
+            }
+        });
+        window.onbeforeunload = function (e) {
+            e = e || window.event;
+        
+            // For IE and Firefox prior to version 4
+            if (e) {
+                e.returnValue = 'Sure?';
+            }
+        
+            // For Safari
+            return 'Sure?';
+        };
+   //     return () => {
+            //window.removeEventListener('beforeunload', setupBeforeUnloadListener());
+         
+    ////    }
+      });
     if (showResults) {
         return (
             <div className="container results">
@@ -131,8 +154,11 @@ function App() {
         );
     } else {
         return (
+            
             <QuizContext.Provider value={{state, dispatch}}>
+                {alert}
                 <div className="container">
+                    
                     <Progress
                         total={questions.length}
                         current={currentQuestion + 1}
